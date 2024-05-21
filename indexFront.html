@@ -41,27 +41,53 @@
             border: 1px solid #ccc;
             border-radius: 4px;
             background: #f4fcfd;
+            margin-bottom: 20px;
+        }
+        #exchange-rate {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background: #f4fcfd;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Hoteles Tracker</h1>
-        <div class="form-group">
-            <label for="currency">Selecciona tu tipo de moneda</label>
-            <select id="currency">
-                <option value="MXN">MXN</option>
-                <option value="USD">USD</option>
-            </select>
-        </div>
+        
         <div class="form-group">
             <label for="destination">Ingrese su destino donde viajará</label>
             <input type="text" id="destination" placeholder="Destino">
+        </div>
+        <div class="form-group">
+            <label for="currency">Selecciona tu tipo de moneda</label>
+            <select id="currency" onchange="convertCurrency()">
+                <option value="">Seleccione moneda...</option>
+                <option value="MXN">Pesos Mexicanos (MXN)</option>
+                <option value="USD">Dólar Estadounidense (USD)</option>
+                <option value="EUR">Euro (EUR)</option>
+                <option value="GBP">Libra Esterlina (GBP)</option>
+                <option value="JPY">Yen Japonés (JPY)</option>
+                <option value="CAD">Dólar Canadiense (CAD)</option>
+                <option value="AUD">Dólar Australiano (AUD)</option>
+                <option value="CHF">Franco Suizo (CHF)</option>
+                <option value="CNY">Yuan Chino (CNY)</option>
+                <option value="INR">Rupia India (INR)</option>
+                <option value="BRL">Real Brasileño (BRL)</option>
+                <option value="RUB">Rublo Ruso (RUB)</option>
+                <option value="ZAR">Rand Sudafricano (ZAR)</option>
+                <option value="KRW">Won Surcoreano (KRW)</option>
+                <option value="HKD">Dólar de Hong Kong (HKD)</option>
+            </select>
         </div>
         <div id="map"></div>
         <div id="weather">
             <h3>Clima actual</h3>
             <p id="weather-info">Cargando clima...</p>
+        </div>
+        <div id="exchange-rate">
+            <h3>Tipo de cambio</h3>
+            <p id="exchange-info">Seleccione una moneda para ver el tipo de cambio.</p>
         </div>
     </div>
 
@@ -123,6 +149,23 @@
                 });
         }
 
+        async function convertCurrency() {
+            const currency = document.getElementById('currency').value;
+            const apiKey = '0f07820e656f674f9a8a3a26'; // Reemplaza con tu clave de API de ExchangeRate-API
+            const apiUrl = `https://v6.exchangerate-api.com/v6/${apiKey}/latest/USD`;
+
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                const rate = data.conversion_rates[currency];
+                const conversionResult = `1 Dólar Estadounidense (USD) = ${rate} ${currency}`;
+                document.getElementById('exchange-info').innerHTML = conversionResult;
+            } catch (error) {
+                console.error('Error fetching exchange rate:', error);
+                document.getElementById('exchange-info').textContent = 'Error fetching exchange rate. Please try again later.';
+            }
+        }
+
         // Load the Google Maps script asynchronously
         function loadScript() {
             const script = document.createElement('script');
@@ -136,3 +179,5 @@
     </script>
 </body>
 </html>
+
+
