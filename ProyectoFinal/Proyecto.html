@@ -100,20 +100,50 @@
             <div>
                 <label for="from">De:</label>
                 <select id="from">
-                    <option value="USD">USD</option>
-                    <!-- Add more currency options as needed -->
+                    <option value="">Seleccione moneda...</option>
+                    <option value="MXN">Pesos Mexicanos (MXN)</option>
+                    <option value="USD">Dólar Estadounidense (USD)</option>
+                    <option value="EUR">Euro (EUR)</option>
+                    <option value="GBP">Libra Esterlina (GBP)</option>
+                    <option value="JPY">Yen Japonés (JPY)</option>
+                    <option value="CAD">Dólar Canadiense (CAD)</option>
+                    <option value="AUD">Dólar Australiano (AUD)</option>
+                    <option value="CHF">Franco Suizo (CHF)</option>
+                    <option value="CNY">Yuan Chino (CNY)</option>
+                    <option value="INR">Rupia India (INR)</option>
+                    <option value="BRL">Real Brasileño (BRL)</option>
+                    <option value="RUB">Rublo Ruso (RUB)</option>
+                    <option value="ZAR">Rand Sudafricano (ZAR)</option>
+                    <option value="KRW">Won Surcoreano (KRW)</option>
+                    <option value="HKD">Dólar de Hong Kong (HKD)</option>
                 </select>
             </div>
             <div>
                 <label for="to">A:</label>
                 <select id="to">
-                    <option value="USD">USD</option>
-                    <option value="MXN">MXN</option>
-                    <!-- Add more currency options as needed -->
+                    <option value="">Seleccione moneda...</option>
+                    <option value="MXN">Pesos Mexicanos (MXN)</option>
+                    <option value="USD">Dólar Estadounidense (USD)</option>
+                    <option value="EUR">Euro (EUR)</option>
+                    <option value="GBP">Libra Esterlina (GBP)</option>
+                    <option value="JPY">Yen Japonés (JPY)</option>
+                    <option value="CAD">Dólar Canadiense (CAD)</option>
+                    <option value="AUD">Dólar Australiano (AUD)</option>
+                    <option value="CHF">Franco Suizo (CHF)</option>
+                    <option value="CNY">Yuan Chino (CNY)</option>
+                    <option value="INR">Rupia India (INR)</option>
+                    <option value="BRL">Real Brasileño (BRL)</option>
+                    <option value="RUB">Rublo Ruso (RUB)</option>
+                    <option value="ZAR">Rand Sudafricano (ZAR)</option>
+                    <option value="KRW">Won Surcoreano (KRW)</option>
+                    <option value="HKD">Dólar de Hong Kong (HKD)</option>
                 </select>
             </div>
             <button onclick="convertCurrency()" class="btn btn-primary boton">Convertir</button>
             <div id="result"></div>
+            <div id="ubicacionActual">
+              Aqui va el mapa con la ubicacióna actual
+            </div>
         </div>
         <div class="hoteles">
             <div class="encabezado">
@@ -137,18 +167,18 @@
                         <select id="country" class="form-select">
                             <option value="all">All</option>
                             <option value="au">Australia</option>
-                            <option value="br">Brazil</option>
-                            <option value="ca">Canada</option>
-                            <option value="fr">France</option>
-                            <option value="de">Germany</option>
-                            <option value="mx">Mexico</option>
-                            <option value="nz">New Zealand</option>
-                            <option value="it">Italy</option>
-                            <option value="za">South Africa</option>
-                            <option value="es">Spain</option>
+                            <option value="br">Brasil</option>
+                            <option value="ca">Canadá</option>
+                            <option value="fr">Francia</option>
+                            <option value="de">Alemania</option>
+                            <option value="mx">México</option>
+                            <option value="nz">Nueva Zelanda</option>
+                            <option value="it">Italia</option>
+                            <option value="za">Sudáfrica</option>
+                            <option value="es">España</option>
                             <option value="pt">Portugal</option>
-                            <option value="us" selected>U.S.A.</option>
-                            <option value="uk">United Kingdom</option>
+                            <option value="us" selected>E.U.A.</option>
+                            <option value="uk">Reino Unido</option>
                         </select>
                     </div>
                 </div>
@@ -491,6 +521,30 @@
             },
         );
     }
+
+    function initMapUbicacionActual() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition((position) => {
+                    const pos = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+                    const map = new google.maps.Map(document.getElementById('ubicacionActual'), {
+                        center: pos,
+                        zoom: 15
+                    });
+                    new google.maps.Marker({
+                        position: pos,
+                        map: map
+                    });
+                }, () => {
+                    handleLocationErrorUbicacionActual(true, map.getCenter());
+                });
+            } else {
+                handleLocationErrorUbicacionActual(false, map.getCenter());
+            }
+        }
+
 
     // Load the place information into the HTML elements used by the info window.
     function buildIWContent(place) {
