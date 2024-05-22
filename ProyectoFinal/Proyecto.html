@@ -47,12 +47,9 @@
                 </li>
             </ul>
 
-            <!-- Formulario de búsqueda -->
-            <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="search" placeholder="¿Dónde quieres viajar?"
-                    aria-label="Buscar">
-                <button class="btn  my-2 my-sm-0 button-back" type="submit"><i
-                        class="fa-solid fa-magnifying-glass"></i></button>
+            <form class="form-inline my-2 my-lg-0" id="search-form">
+                <input class="form-control mr-sm-2" id="search-input" type="search" placeholder="¿Dónde quieres viajar?" aria-label="Buscar">
+                <button class="btn my-2 my-sm-0 button-back" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
             </form>
         </div>
     </nav>
@@ -73,6 +70,7 @@
                 <p class="textoClima"><i class="fa-regular fa-sun"></i><strong>Temperatura:</strong> <span
                         id="temperature"></span></p>
             </div>
+            <div id="resultadoWikipedia"></div>
         </div>
 
 
@@ -269,6 +267,62 @@
 
     // Llamar a la función para obtener el clima al cargar la página
     getWeather();
+    $(document).ready(function() {
+    $('#search-form').on('submit', function(e) {
+        e.preventDefault();
+        var query = $('#search-input').val();
+        searchWikipedia(query);
+    });
+
+    function searchWikipedia(query) {
+        var url = 'https://en.wikipedia.org/w/api.php';
+        $.ajax({
+            url: url,
+            data: {
+                action: 'query',
+                list: 'search',
+                srsearch: query,
+                format: 'json',
+                origin: '*'
+            },
+            success: function(data) {
+                if (data.query.search.length > 0) {
+                    var title = data.query.search[0].title;
+                    getExtract(title);
+                } else {
+                    $('#resultadoWikipedia').html('<p>No se encontraron resultados</p>');
+                }
+            },
+            error: function(error) {
+                console.log('Error:', error);
+            }
+        });
+    }
+
+    function getExtract(title) {
+        var url = 'https://en.wikipedia.org/w/api.php';
+        $.ajax({
+            url: url,
+            data: {
+                action: 'query',
+                prop: 'extracts',
+                exintro: true,
+                titles: title,
+                format: 'json',
+                origin: '*'
+            },
+            success: function(data) {
+                var pages = data.query.pages;
+                var pageId = Object.keys(pages)[0];
+                var extract = pages[pageId].extract;
+                $('#resultadoWikipedia').html('<h3>' + title + '</h3>' + extract);
+            },
+            error: function(error) {
+                console.log('Error:', error);
+            }
+        });
+    }
+});
 
 
 
