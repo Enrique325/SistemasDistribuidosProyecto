@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Turística</title>
+    <!-- Enlace a Bootstrap CSS -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Tu archivo de CSS personalizado -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+        integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initMap&libraries=places&v=weekly"
+        defer></script>
+
+    <!-- Favicon -->
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark back">
+        <a class="navbar-brand" href="#">Guía Turística</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Inicio <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Destinos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Alojamientos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Actividades</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contacto</a>
+                </li>
+            </ul>
+
+            <!-- Formulario de búsqueda -->
+            <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="search" placeholder="¿Dónde quieres viajar?"
+                    aria-label="Buscar">
+                <button class="btn  my-2 my-sm-0 button-back" type="submit"><i
+                        class="fa-solid fa-magnifying-glass"></i></button>
+            </form>
+        </div>
+    </nav>
+
+    <div class="container text-center">
+        <!-- Aquí puedes agregar el contenido principal de tu página -->
+        <h1>Bienvenido a nuestra Guía Turística</h1>
+        <p>Descubre los mejores destinos, alojamientos y actividades para disfrutar al máximo tu viaje.</p>
+
+    </div>
+
+    <div class="datos">
+        <div class="weather-box">
+            <h2>Datos del Clima</h2>
+            <div class="weather-info">
+                <p class="textoClima"><i class="fa-solid fa-map-pin"></i><strong>Ubicación:</strong> <span
+                        id="location"></span></p>
+                <p class="textoClima"><i class="fa-regular fa-sun"></i><strong>Temperatura:</strong> <span
+                        id="temperature"></span></p>
+            </div>
+        </div>
+
+
+        <div class="imagenes">
+            <img src="./img/cenotes2.jpg" alt="" class="imagenesReferencia">
+            <img src="./img/chichen.jpg" alt="" class="imagenesReferencia">
+            <img src="./img/comida.jpeg" alt="" class="imagenesReferencia">
+            <img src="./img/playa.jpg" alt="" class="imagenesReferencia">
+        </div>
+    </div>
+
+    <div class="datosExtras">
+        <div id="converter">
+            <h2 class="textoEncabezado2">Convertidor de Moneda para Viajeros</h2>
+            <p class="convertidor">¿Estás planeando tu próximo viaje y necesitas convertir tu moneda? ¡Estás en el lugar
+                correcto! Usa
+                nuestro convertidor de moneda para conocer al instante el valor de tu dinero en la moneda de tu destino.
+                Solo ingresa el monto y selecciona las monedas de origen y destino.</p>
+                
+
+            <div>
+                <label for="amount"><img src="./img/dinero.gif" alt="" class="dinero">Cantidad:</label>
+                <input type="number" id="amount" placeholder="Cantidad" class="form-control mr-sm-2">
+            </div>
+            <div>
+                <label for="from">De:</label>
+                <select id="from">
+                    <option value="USD">USD</option>
+                    <!-- Add more currency options as needed -->
+                </select>
+            </div>
+            <div>
+                <label for="to">A:</label>
+                <select id="to">
+                    <option value="USD">USD</option>
+                    <option value="MXN">MXN</option>
+                    <!-- Add more currency options as needed -->
+                </select>
+            </div>
+            <button onclick="convertCurrency()" class="btn btn-primary boton">Convertir</button>
+            <div id="result"></div>
+        </div>
+        <div class="hoteles">
+            <div class="encabezado">
+                <h3 class="textoEncabezado">Busca y reserva tu lugar perfecto</h3>
+                <div class="subtextoEncabezado"><i class="fa-solid fa-moon"></i>Acumula recompensas por cada noche de
+                    estancia</div>
+                <div class="subtextoEncabezado"><i class="fa-solid fa-ticket"></i>Ahorra más con los Precios para socios
+                </div>
+                <div class="subtextoEncabezado"><i class="fa-solid fa-calendar-days"></i>Opciones de cancelación
+                    gratuita si cambias de planes</div>
+            </div>
+            <div>
+                <div class="hotel-search">
+                    <div id="findhotels">Buscar hotel en:</div>
+
+                    <div id="locationField">
+                        <input id="autocomplete" class="form-control mr-sm-2" placeholder="Buscar Ciudad" type="text" />
+                    </div>
+
+                    <div id="controls">
+                        <select id="country" class="form-select">
+                            <option value="all">All</option>
+                            <option value="au">Australia</option>
+                            <option value="br">Brazil</option>
+                            <option value="ca">Canada</option>
+                            <option value="fr">France</option>
+                            <option value="de">Germany</option>
+                            <option value="mx">Mexico</option>
+                            <option value="nz">New Zealand</option>
+                            <option value="it">Italy</option>
+                            <option value="za">South Africa</option>
+                            <option value="es">Spain</option>
+                            <option value="pt">Portugal</option>
+                            <option value="us" selected>U.S.A.</option>
+                            <option value="uk">United Kingdom</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="map"></div>
+
+                <div id="listing">
+                    <table id="resultsTable" class="table table-hover">
+                        <tbody id="results">
+                            Lista de Hoteles
+                        </tbody>
+                    </table>
+                </div>
+
+                <div style="display: none">
+                    <div id="info-content">
+                        <table>
+                            <tr id="iw-url-row" class="iw_table_row">
+                                <td id="iw-icon" class="iw_table_icon"></td>
+                                <td id="iw-url"></td>
+                            </tr>
+                            <tr id="iw-address-row" class="iw_table_row">
+                                <td class="iw_attribute_name">Address:</td>
+                                <td id="iw-address"></td>
+                            </tr>
+                            <tr id="iw-phone-row" class="iw_table_row">
+                                <td class="iw_attribute_name">Telephone:</td>
+                                <td id="iw-phone"></td>
+                            </tr>
+                            <tr id="iw-rating-row" class="iw_table_row">
+                                <td class="iw_attribute_name">Rating:</td>
+                                <td id="iw-rating"></td>
+                            </tr>
+                            <tr id="iw-website-row" class="iw_table_row">
+                                <td class="iw_attribute_name">Website:</td>
+                                <td id="iw-website"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Enlaces a los archivos de Bootstrap y jQuery necesarios para el funcionamiento de Bootstrap -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>
+
+
+
+<script>
+    async function getWeather() {
+        // Obtener coordenadas de la ubicación actual del usuario
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(async function (position) {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+
+                const apiKey = 'da89341e8414fcbf56e17074620471f4'; // Replace 'YOUR_API_KEY' with your OpenWeatherMap API key
+                const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`;
+
+                try {
+                    const response = await fetch(apiUrl);
+                    const data = await response.json();
+                    console.log(data);
+                    const temperature = data.main.temp;
+                    const location = data.name + ', ' + data.sys.country;
+                    document.getElementById('location').textContent = location;
+                    document.getElementById('temperature').textContent = `${temperature}°C`;
+                } catch (error) {
+                    console.error('Error fetching weather data:', error);
+                    document.getElementById('location').textContent = 'Error fetching weather data. Please try again later.';
+                    document.getElementById('temperature').textContent = '';
+                }
+            });
+        } else {
+            console.error('Geolocation is not supported by this browser.');
+            document.getElementById('location').textContent = 'Geolocation is not supported by this browser.';
+            document.getElementById('temperature').textContent = '';
+        }
+    }
+
+    // Llamar a la función para obtener el clima al cargar la página
+    getWeather();
+
+
+
+</script>
+
+<script>
+    /**
+ * @license
+ * Copyright 2019 Google LLC. All Rights Reserved.
+ * SPDX-License-Identifier: Apache-2.0
+ */
+    // This example uses the autocomplete feature of the Google Places API.
+    // It allows the user to find all hotels in a given place, within a given
+    // country. It then displays markers for all the hotels returned,
+    // with on-click details for each hotel.
+    // This example requires the Places library. Include the libraries=places
+    // parameter when you first load the API. For example:
+    // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
+    let map;
+    let places;
+    let infoWindow;
+    let markers = [];
+    let autocomplete;
+    const countryRestrict = { country: "us" };
+    const MARKER_PATH =
+        "https://developers.google.com/maps/documentation/javascript/images/marker_green";
+    const hostnameRegexp = new RegExp("^https?://.+?/");
+    const countries = {
+        au: {
+            center: { lat: -25.3, lng: 133.8 },
+            zoom: 4,
+        },
+        br: {
+            center: { lat: -14.2, lng: -51.9 },
+            zoom: 3,
+        },
+        ca: {
+            center: { lat: 62, lng: -110.0 },
+            zoom: 3,
+        },
+        fr: {
+            center: { lat: 46.2, lng: 2.2 },
+            zoom: 5,
+        },
+        de: {
+            center: { lat: 51.2, lng: 10.4 },
+            zoom: 5,
+        },
+        mx: {
+            center: { lat: 23.6, lng: -102.5 },
+            zoom: 4,
+        },
+        nz: {
+            center: { lat: -40.9, lng: 174.9 },
+            zoom: 5,
+        },
+        it: {
+            center: { lat: 41.9, lng: 12.6 },
+            zoom: 5,
+        },
+        za: {
+            center: { lat: -30.6, lng: 22.9 },
+            zoom: 5,
+        },
+        es: {
+            center: { lat: 40.5, lng: -3.7 },
+            zoom: 5,
+        },
+        pt: {
+            center: { lat: 39.4, lng: -8.2 },
+            zoom: 6,
+        },
+        us: {
+            center: { lat: 37.1, lng: -95.7 },
+            zoom: 3,
+        },
+        uk: {
+            center: { lat: 54.8, lng: -4.6 },
+            zoom: 5,
+        },
+    };
+
+    function initMap() {
+        map = new google.maps.Map(document.getElementById("map"), {
+            zoom: countries["us"].zoom,
+            center: countries["us"].center,
+            mapTypeControl: false,
+            panControl: false,
+            zoomControl: false,
+            streetViewControl: false,
+        });
+        infoWindow = new google.maps.InfoWindow({
+            content: document.getElementById("info-content"),
+        });
+        // Create the autocomplete object and associate it with the UI input control.
+        // Restrict the search to the default country, and to place type "cities".
+        autocomplete = new google.maps.places.Autocomplete(
+            document.getElementById("autocomplete"),
+            {
+                types: ["(cities)"],
+                componentRestrictions: countryRestrict,
+                fields: ["geometry"],
+            },
+        );
+        places = new google.maps.places.PlacesService(map);
+        autocomplete.addListener("place_changed", onPlaceChanged);
+        // Add a DOM event listener to react when the user selects a country.
+        document
+            .getElementById("country")
+            .addEventListener("change", setAutocompleteCountry);
+    }
+
+    // When the user selects a city, get the place details for the city and
+    // zoom the map in on the city.
+    function onPlaceChanged() {
+        const place = autocomplete.getPlace();
+
+        if (place.geometry && place.geometry.location) {
+            map.panTo(place.geometry.location);
+            map.setZoom(15);
+            search();
+        } else {
+            document.getElementById("autocomplete").placeholder = "Enter a city";
+        }
+    }
+
+    // Search for hotels in the selected city, within the viewport of the map.
+    function search() {
+        const search = {
+            bounds: map.getBounds(),
+            types: ["lodging"],
+        };
+
+        places.nearbySearch(search, (results, status, pagination) => {
+            if (status === google.maps.places.PlacesServiceStatus.OK && results) {
+                clearResults();
+                clearMarkers();
+
+                // Create a marker for each hotel found, and
+                // assign a letter of the alphabetic to each marker icon.
+                for (let i = 0; i < results.length; i++) {
+                    const markerLetter = String.fromCharCode("A".charCodeAt(0) + (i % 26));
+                    const markerIcon = MARKER_PATH + markerLetter + ".png";
+
+                    // Use marker animation to drop the icons incrementally on the map.
+                    markers[i] = new google.maps.Marker({
+                        position: results[i].geometry.location,
+                        animation: google.maps.Animation.DROP,
+                        icon: markerIcon,
+                    });
+                    // If the user clicks a hotel marker, show the details of that hotel
+                    // in an info window.
+                    // @ts-ignore TODO refactor to avoid storing on marker
+                    markers[i].placeResult = results[i];
+                    google.maps.event.addListener(markers[i], "click", showInfoWindow);
+                    setTimeout(dropMarker(i), i * 100);
+                    addResult(results[i], i);
+                }
+            }
+        });
+    }
+
+    function clearMarkers() {
+        for (let i = 0; i < markers.length; i++) {
+            if (markers[i]) {
+                markers[i].setMap(null);
+            }
+        }
+
+        markers = [];
+    }
+
+    // Set the country restriction based on user input.
+    // Also center and zoom the map on the given country.
+    function setAutocompleteCountry() {
+        const country = document.getElementById("country").value;
+
+        if (country == "all") {
+            autocomplete.setComponentRestrictions({ country: [] });
+            map.setCenter({ lat: 15, lng: 0 });
+            map.setZoom(2);
+        } else {
+            autocomplete.setComponentRestrictions({ country: country });
+            map.setCenter(countries[country].center);
+            map.setZoom(countries[country].zoom);
+        }
+
+        clearResults();
+        clearMarkers();
+    }
+
+    function dropMarker(i) {
+        return function () {
+            markers[i].setMap(map);
+        };
+    }
+
+    function addResult(result, i) {
+        const results = document.getElementById("results");
+        const markerLetter = String.fromCharCode("A".charCodeAt(0) + (i % 26));
+        const markerIcon = MARKER_PATH + markerLetter + ".png";
+        const tr = document.createElement("tr");
+
+        tr.style.backgroundColor = i % 2 === 0 ? "#F0F0F0" : "#FFFFFF";
+        tr.onclick = function () {
+            google.maps.event.trigger(markers[i], "click");
+        };
+
+        const iconTd = document.createElement("td");
+        const nameTd = document.createElement("td");
+        const icon = document.createElement("img");
+
+        icon.src = markerIcon;
+        icon.setAttribute("class", "placeIcon");
+        icon.setAttribute("className", "placeIcon");
+
+        const name = document.createTextNode(result.name);
+
+        iconTd.appendChild(icon);
+        nameTd.appendChild(name);
+        tr.appendChild(iconTd);
+        tr.appendChild(nameTd);
+        results.appendChild(tr);
+    }
+
+    function clearResults() {
+        const results = document.getElementById("results");
+
+        while (results.childNodes[0]) {
+            results.removeChild(results.childNodes[0]);
+        }
+    }
+
+    // Get the place details for a hotel. Show the information in an info window,
+    // anchored on the marker for the hotel that the user selected.
+    function showInfoWindow() {
+        // @ts-ignore
+        const marker = this;
+
+        places.getDetails(
+            { placeId: marker.placeResult.place_id },
+            (place, status) => {
+                if (status !== google.maps.places.PlacesServiceStatus.OK) {
+                    return;
+                }
+
+                infoWindow.open(map, marker);
+                buildIWContent(place);
+            },
+        );
+    }
+
+    // Load the place information into the HTML elements used by the info window.
+    function buildIWContent(place) {
+        document.getElementById("iw-icon").innerHTML =
+            '<img class="hotelIcon" ' + 'src="' + place.icon + '"/>';
+        document.getElementById("iw-url").innerHTML =
+            '<b><a href="' + place.url + '">' + place.name + "</a></b>";
+        document.getElementById("iw-address").textContent = place.vicinity;
+        if (place.formatted_phone_number) {
+            document.getElementById("iw-phone-row").style.display = "";
+            document.getElementById("iw-phone").textContent =
+                place.formatted_phone_number;
+        } else {
+            document.getElementById("iw-phone-row").style.display = "none";
+        }
+
+        // Assign a five-star rating to the hotel, using a black star ('&#10029;')
+        // to indicate the rating the hotel has earned, and a white star ('&#10025;')
+        // for the rating points not achieved.
+        if (place.rating) {
+            let ratingHtml = "";
+
+            for (let i = 0; i < 5; i++) {
+                if (place.rating < i + 0.5) {
+                    ratingHtml += "&#10025;";
+                } else {
+                    ratingHtml += "&#10029;";
+                }
+
+                document.getElementById("iw-rating-row").style.display = "";
+                document.getElementById("iw-rating").innerHTML = ratingHtml;
+            }
+        } else {
+            document.getElementById("iw-rating-row").style.display = "none";
+        }
+
+        // The regexp isolates the first part of the URL (domain plus subdomain)
+        // to give a short URL for displaying in the info window.
+        if (place.website) {
+            let fullUrl = place.website;
+            let website = String(hostnameRegexp.exec(place.website));
+
+            if (!website) {
+                website = "http://" + place.website + "/";
+                fullUrl = website;
+            }
+
+            document.getElementById("iw-website-row").style.display = "";
+            document.getElementById("iw-website").textContent = website;
+        } else {
+            document.getElementById("iw-website-row").style.display = "none";
+        }
+    }
+
+    window.initMap = initMap;
+
+
+</script>
+
+<script>
+    async function convertCurrency() {
+        const amount = document.getElementById('amount').value;
+        const fromCurrency = document.getElementById('from').value;
+        const toCurrency = document.getElementById('to').value;
+        const apiKey = '0f07820e656f674f9a8a3a26'; // Replace with your ExchangeRate-API API key
+        const apiUrl = `https://v6.exchangerate-api.com/v6/${apiKey}/latest/${fromCurrency}`;
+    
+        try {
+            const response = await fetch(apiUrl);
+            const data = await response.json();
+            const rate = data.conversion_rates[toCurrency];
+            const convertedAmount = amount * rate;
+            document.getElementById('result').textContent = `${amount} ${fromCurrency} = ${convertedAmount.toFixed(2)} ${toCurrency}`;
+        } catch (error) {
+            console.error('Error fetching exchange rate:', error);
+            document.getElementById('result').textContent = 'Error fetching exchange rate. Please try again later.';
+        }
+    }
+        
+</script>

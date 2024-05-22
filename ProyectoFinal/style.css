@@ -1,0 +1,168 @@
+/* styles.css */
+
+
+.container {
+    margin-top: 20px;
+}
+
+/* Estilos adicionales para personalizar tu página */
+
+.weather-box {
+    border: solid;
+    /* 40px de ancho en los bordes superior e inferior */
+    border-left-width: 50px;
+    /* 50px de ancho en el borde izquierdo */
+    border-radius: 10px;
+    /* Para redondear los bordes */
+    padding: 20px;
+    /* Añadir relleno interno para separar el contenido del borde */
+}
+
+.form-select {
+    border-radius: 10px;
+    background-color: white;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.fa-map-pin {
+    margin-right: 10px;
+    color: red;
+}
+
+.fa-sun {
+    margin-right: 10px;
+    color: yellow
+}
+
+.textoClima {
+    font-size: 20px;
+}
+
+.back {
+    background: #f70759 !important;
+}
+
+.fa-magnifying-glass {
+    color: #f70759;
+}
+
+.button-back {
+    background: white;
+}
+
+.datos {
+    display: flex;
+}
+
+.weather-box {
+    border-color: #79e2ff;
+}
+
+.imagenesReferencia {
+    width: 270px;
+    height: 260px;
+    border-radius: 12px;
+}
+
+.imagenes {
+    padding-left: 15px;
+}
+
+.datosExtras {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 25px;
+}
+
+.dinero {
+    width: 30px;
+    height: 30px;
+    text-align: center;
+}
+
+#resultsTable {
+    border-collapse: collapse;
+    width: 240px;
+}
+
+.hoteles {
+    width: 900px;
+    height: 500px;
+}
+
+.boton {
+    display: block;
+    margin: 20px auto;
+}
+
+.textoEncabezado {
+    text-align: center;
+    color: white;
+    font-size: 20px;
+}
+
+.convertidor {
+    text-align: center;
+}
+
+.textoEncabezado2 {
+    text-align: center;
+    color: rgb(0, 0, 0);
+    font-size: 20px;
+}
+
+.encabezado {
+    border: solid 1px;
+    border-radius: 20px;
+    width: auto;
+    height: 150px;
+    background-color: #e61e43;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.subtextoEncabezado {
+    height: 50px;
+    width: 450px;
+    text-align: center;
+    border: solid 1px;
+    border-radius: 10px;
+    color: white;
+    border-color: #a1122c;
+    background-color: #a1122c;
+    text-align: center;
+    margin-right: 5px;
+}
+
+.fa-moon,
+.fa-ticket,
+.fa-calendar-days {
+    margin-right: 25px;
+}
+
+#map {
+    width: 900px;
+    height: 600px;
+}
+
+#findhotels {
+    font-size: 25px;
+}
+
+#converter {
+    max-width: 500px;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#converter div {
+    margin-bottom: 10px;
+}
+
+#result {
+    margin-top: 20px;
+    font-weight: bold;
+}
