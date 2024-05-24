@@ -261,11 +261,6 @@ async function getWeatherForCountry(countryName) {
     }
 }
 
-// Llamar a esta función con el nombre del país para obtener el clima de ese país
-getWeatherForCountry('germany');
-
-
-
     $(document).ready(function() {
         $('#search-form').on('submit', function(e) {
             e.preventDefault();
@@ -345,6 +340,8 @@ getWeatherForCountry('germany');
         const params = getQueryParams();
         if (params.name) {
             const searchInput = document.getElementById('search-input');
+            //Aquí se ejecuta la api del clima
+            getWeatherForCountry(params.name);
             searchInput.value = params.name;
             clickSearchButton();
             displayCountryData();
