@@ -222,7 +222,6 @@
 </html>
 
 <script>
-    // Función para obtener los parámetros de la URL
     function getQueryParams() {
         const params = new URLSearchParams(window.location.search);
         return {
@@ -236,56 +235,47 @@
         };
     }
 
-    // Función para poner el valor en el campo de búsqueda y mostrar los datos del país automáticamente
     function searchAutomatically() {
         const params = getQueryParams();
         if (params.name) {
             const searchInput = document.getElementById('search-input');
             searchInput.value = params.name;
-            // Mostrar los datos del país sin enviar el formulario
             displayCountryData();
         }
     }
 
-    // Función para mostrar los datos del país
     function displayCountryData() {
         const country = getQueryParams();
         if (country.name) {
-            document.querySelector('.nombrePais').textContent = country.name;
-            document.querySelector('.infoPais').textContent = `Capital: ${country.capital}, Región: ${country.region}, Población: ${country.population} habitantes`;
-            document.getElementById('flagPais').innerHTML = `<img src="${country.flag}" alt="Bandera de ${country.name}" style="width:100px;">`;
+            const nombrePais = document.querySelector('.nombrePais');
+            nombrePais.textContent = country.name;
+            const infoPais = document.querySelector('.infoPais');
+            infoPais.textContent = `Capital: ${country.capital}, Región: ${country.region}, Población: ${country.population} habitantes`;
+            const flagPais = document.getElementById('flagPais');
+            flagPais.innerHTML = `<img src="${country.flag}" alt="Bandera de ${country.name}" style="width:100px;">`;
         } else {
             alert('No se proporcionaron datos del país.');
         }
     }
 
-    // Prevenir el envío del formulario y mostrar los datos manualmente
     document.getElementById('search-form').addEventListener('submit', function(event) {
         event.preventDefault();
         displayCountryData();
     });
 
-    // Ejecutar la función al cargar la página
     document.addEventListener('DOMContentLoaded', searchAutomatically);
-</script>
 
-
-
-<script>
     async function getWeather() {
-        // Obtener coordenadas de la ubicación actual del usuario
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(async function (position) {
                 const latitude = position.coords.latitude;
                 const longitude = position.coords.longitude;
-
-                const apiKey = 'da89341e8414fcbf56e17074620471f4'; // Replace 'YOUR_API_KEY' with your OpenWeatherMap API key
+                const apiKey = 'da89341e8414fcbf56e17074620471f4';
                 const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`;
 
                 try {
                     const response = await fetch(apiUrl);
                     const data = await response.json();
-                    console.log(data);
                     const temperature = data.main.temp;
                     const location = data.name + ', ' + data.sys.country;
                     document.getElementById('location').textContent = location;
@@ -303,82 +293,69 @@
         }
     }
 
-    // Llamar a la función para obtener el clima al cargar la página
     getWeather();
+
     $(document).ready(function() {
-    $('#search-form').on('submit', function(e) {
-        e.preventDefault();
-        var query = $('#search-input').val();
-        searchWikipedia(query);
-    });
+        $('#search-form').on('submit', function(e) {
+            e.preventDefault();
+            var query = $('#search-input').val();
+            searchWikipedia(query);
+        });
 
-    function searchWikipedia(query) {
-        var url = 'https://es.wikipedia.org/w/api.php';
-        $.ajax({
-            url: url,
-            data: {
-                action: 'query',
-                list: 'search',
-                srsearch: query,
-                format: 'json',
-                origin: '*'
-            },
-            success: function(data) {
-                if (data.query.search.length > 0) {
-                    var title = data.query.search[0].title;
-                    getExtract(title);
-                } else {
-                    $('#resultadoWikipedia').html('<p>No se encontraron resultados</p>');
+        function searchWikipedia(query) {
+            var url = 'https://es.wikipedia.org/w/api.php';
+            $.ajax({
+                url: url,
+                data: {
+                    action: 'query',
+                    list: 'search',
+                    srsearch: query,
+                    format: 'json',
+                    origin: '*'
+                },
+                success: function(data) {
+                    if (data.query.search.length > 0) {
+                        var title = data.query.search[0].title;
+                        getExtract(title);
+                    } else {
+                        $('#resultadoWikipedia').html('<p>No se encontraron resultados</p>');
+                    }
+                },
+                error: function(error) {
+                    console.log('Error:', error);
                 }
-            },
-            error: function(error) {
-                console.log('Error:', error);
-            }
-        });
-    }
+            });
+        }
 
-    function getExtract(title) {
-        var url = 'https://es.wikipedia.org/w/api.php';
-        $.ajax({
-            url: url,
-            data: {
-                action: 'query',
-                prop: 'extracts',
-                exintro: true,
-                titles: title,
-                format: 'json',
-                origin: '*'
-            },
-            success: function(data) {
-                var pages = data.query.pages;
-                var pageId = Object.keys(pages)[0];
-                var extract = pages[pageId].extract;
-                $('#resultadoWikipedia').html('<h3>' + title + '</h3>' + extract);
-            },
-            error: function(error) {
-                console.log('Error:', error);
-            }
-        });
-    }
-});
-
-
-
+        function getExtract(title) {
+            var url = 'https://es.wikipedia.org/w/api.php';
+            $.ajax({
+                url: url,
+                data: {
+                    action: 'query',
+                    prop: 'extracts',
+                    exintro: true,
+                    titles: title,
+                    format: 'json',
+                    origin: '*'
+                },
+                success: function(data) {
+                    var pages = data.query.pages;
+                    var pageId = Object.keys(pages)[0];
+                    var extract = pages[pageId].extract;
+                    $('#resultadoWikipedia').html('<h3>' + title + '</h3>' + extract);
+                },
+                error: function(error) {
+                    console.log('Error:', error);
+                }
+            });
+        }
+    });
 </script>
 
+
+
 <script>
-    /**
- * @license
- * Copyright 2019 Google LLC. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
-    // This example uses the autocomplete feature of the Google Places API.
-    // It allows the user to find all hotels in a given place, within a given
-    // country. It then displays markers for all the hotels returned,
-    // with on-click details for each hotel.
-    // This example requires the Places library. Include the libraries=places
-    // parameter when you first load the API. For example:
-    // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
     let map;
     let places;
     let infoWindow;
