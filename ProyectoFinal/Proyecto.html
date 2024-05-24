@@ -50,7 +50,10 @@
     </nav>
 
     <div class="container text-center">
-        <h1>Bienvenido a nuestra Guía Turística</h1>
+        <h2>Bienvenido a nuestra Guía Turística para:</h1>
+        <div class="nombrePais" style="font-size: 40px;font:bold ;"></div>
+        <div id="flagPais"></div>
+        <div class="infoPais"></div>
         <p>Descubre los mejores destinos, alojamientos y actividades para disfrutar al máximo tu viaje.</p>
     </div>
 
@@ -217,6 +220,54 @@
 </body>
 
 </html>
+
+<script>
+    // Función para obtener los parámetros de la URL
+    function getQueryParams() {
+        const params = new URLSearchParams(window.location.search);
+        return {
+            name: params.get('name'),
+            capital: params.get('capital'),
+            region: params.get('region'),
+            population: params.get('population'),
+            flag: params.get('flag'),
+            currencyCode: params.get('currencyCode'),
+            languages: params.get('languages')
+        };
+    }
+
+    // Función para poner el valor en el campo de búsqueda y mostrar los datos del país automáticamente
+    function searchAutomatically() {
+        const params = getQueryParams();
+        if (params.name) {
+            const searchInput = document.getElementById('search-input');
+            searchInput.value = params.name;
+            // Mostrar los datos del país sin enviar el formulario
+            displayCountryData();
+        }
+    }
+
+    // Función para mostrar los datos del país
+    function displayCountryData() {
+        const country = getQueryParams();
+        if (country.name) {
+            document.querySelector('.nombrePais').textContent = country.name;
+            document.querySelector('.infoPais').textContent = `Capital: ${country.capital}, Región: ${country.region}, Población: ${country.population} habitantes`;
+            document.getElementById('flagPais').innerHTML = `<img src="${country.flag}" alt="Bandera de ${country.name}" style="width:100px;">`;
+        } else {
+            alert('No se proporcionaron datos del país.');
+        }
+    }
+
+    // Prevenir el envío del formulario y mostrar los datos manualmente
+    document.getElementById('search-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        displayCountryData();
+    });
+
+    // Ejecutar la función al cargar la página
+    document.addEventListener('DOMContentLoaded', searchAutomatically);
+</script>
 
 
 
