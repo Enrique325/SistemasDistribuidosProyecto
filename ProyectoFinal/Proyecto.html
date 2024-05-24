@@ -44,7 +44,7 @@
 
             <form class="form-inline my-2 my-lg-0" id="search-form">
                 <input class="form-control mr-sm-2" id="search-input" type="search" placeholder="¿Dónde quieres viajar?" aria-label="Buscar">
-                <button class="btn my-2 my-sm-0 button-back" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                <button class="btn my-2 my-sm-0 button-back" id="btnBuscarWiki" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
             </form>
         </div>
     </nav>
@@ -222,78 +222,49 @@
 </html>
 
 <script>
-    function getQueryParams() {
-        const params = new URLSearchParams(window.location.search);
-        return {
-            name: params.get('name'),
-            capital: params.get('capital'),
-            region: params.get('region'),
-            population: params.get('population'),
-            flag: params.get('flag'),
-            currencyCode: params.get('currencyCode'),
-            languages: params.get('languages')
-        };
-    }
-
-    function searchAutomatically() {
-        const params = getQueryParams();
-        if (params.name) {
-            const searchInput = document.getElementById('search-input');
-            searchInput.value = params.name;
-            displayCountryData();
-        }
-    }
-
-    function displayCountryData() {
-        const country = getQueryParams();
-        if (country.name) {
-            const nombrePais = document.querySelector('.nombrePais');
-            nombrePais.textContent = country.name;
-            const infoPais = document.querySelector('.infoPais');
-            infoPais.textContent = `Capital: ${country.capital}, Región: ${country.region}, Población: ${country.population} habitantes`;
-            const flagPais = document.getElementById('flagPais');
-            flagPais.innerHTML = `<img src="${country.flag}" alt="Bandera de ${country.name}" style="width:100px;">`;
+    //GET TEMPERATURA Y GEOLOCALIZACION POR API NUEVA
+    async function getCountryCoordinates(countryName) {
+    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(countryName)}`;
+    
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        if (data && data.length > 0) {
+            const { lat, lon } = data[0];
+            return { latitude: lat, longitude: lon };
         } else {
-            alert('No se proporcionaron datos del país.');
+            throw new Error('No se encontraron coordenadas para el país especificado.');
         }
+    } catch (error) {
+        console.error('Error obteniendo coordenadas del país:', error);
+        throw error;
     }
+}
 
-    document.getElementById('search-form').addEventListener('submit', function(event) {
-        event.preventDefault();
-        displayCountryData();
-    });
+async function getWeatherForCountry(countryName) {
+    try {
+        const { latitude, longitude } = await getCountryCoordinates(countryName);
+        const apiKey = 'da89341e8414fcbf56e17074620471f4';
+        const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`;
 
-    document.addEventListener('DOMContentLoaded', searchAutomatically);
+        const response = await fetch(apiUrl);
+        const data = await response.json();
 
-    async function getWeather() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(async function (position) {
-                const latitude = position.coords.latitude;
-                const longitude = position.coords.longitude;
-                const apiKey = 'da89341e8414fcbf56e17074620471f4';
-                const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`;
-
-                try {
-                    const response = await fetch(apiUrl);
-                    const data = await response.json();
-                    const temperature = data.main.temp;
-                    const location = data.name + ', ' + data.sys.country;
-                    document.getElementById('location').textContent = location;
-                    document.getElementById('temperature').textContent = `${temperature}°C`;
-                } catch (error) {
-                    console.error('Error fetching weather data:', error);
-                    document.getElementById('location').textContent = 'Error fetching weather data. Please try again later.';
-                    document.getElementById('temperature').textContent = '';
-                }
-            });
-        } else {
-            console.error('Geolocation is not supported by this browser.');
-            document.getElementById('location').textContent = 'Geolocation is not supported by this browser.';
-            document.getElementById('temperature').textContent = '';
-        }
+        const temperature = data.main.temp;
+        const location = data.name + ', ' + data.sys.country;
+        document.getElementById('location').textContent = location;
+        document.getElementById('temperature').textContent = `${temperature}°C`;
+    } catch (error) {
+        console.error('Error obteniendo datos del clima:', error);
+        document.getElementById('location').textContent = 'Error obteniendo datos del clima. Por favor, inténtalo de nuevo más tarde.';
+        document.getElementById('temperature').textContent = '';
     }
+}
 
-    getWeather();
+// Llamar a esta función con el nombre del país para obtener el clima de ese país
+getWeatherForCountry('germany');
+
+
 
     $(document).ready(function() {
         $('#search-form').on('submit', function(e) {
@@ -351,7 +322,96 @@
             });
         }
     });
+    function clickSearchButton() {
+    const searchButton = document.getElementById('btnBuscarWiki');
+    searchButton.click();
+}
+    // Función para obtener los parámetros de la URL
+    function getQueryParams() {
+        const params = new URLSearchParams(window.location.search);
+        return {
+            name: params.get('name'),
+            capital: params.get('capital'),
+            region: params.get('region'),
+            population: params.get('population'),
+            flag: params.get('flag'),
+            currencyCode: params.get('currencyCode'),
+            languages: params.get('languages')
+        };
+    }
+
+    // Función para poner el valor en el campo de búsqueda y mostrar los datos del país automáticamente
+    function searchAutomatically() {
+        const params = getQueryParams();
+        if (params.name) {
+            const searchInput = document.getElementById('search-input');
+            searchInput.value = params.name;
+            clickSearchButton();
+            displayCountryData();
+           se
+            searchWikipedia(params.name); // Llamar a la función searchWikipedia con el nombre del país como argumento
+        }
+        clickSearchButton();
+    }
+
+    // Función para mostrar los datos del país
+    function displayCountryData() {
+        const country = getQueryParams();
+        if (country.name) {
+            const nombrePais = document.querySelector('.nombrePais');
+            nombrePais.textContent = country.name;
+            const infoPais = document.querySelector('.infoPais');
+            infoPais.textContent = `Capital: ${country.capital}, Región: ${country.region}, Población: ${country.population} habitantes`;
+            const flagPais = document.getElementById('flagPais');
+            flagPais.innerHTML = `<img src="${country.flag}" alt="Bandera de ${country.name}" style="width:100px;">`;
+        } else {
+            alert('No se proporcionaron datos del país.');
+        }
+    }
+
+    // Prevenir el envío del formulario y mostrar los datos manualmente
+    document.getElementById('search-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        displayCountryData();
+        const searchInputValue = document.getElementById('search-input').value;
+        searchWikipedia(searchInputValue); // Llamar a la función searchWikipedia con el valor del campo de búsqueda como argumento
+    });
+
+    // Llamar a searchAutomatically al cargar la página
+    document.addEventListener('DOMContentLoaded', function() {
+    searchAutomatically(); // Autocompletar el campo de búsqueda
+     // Hacer clic en el botón de búsqueda
+});
+    async function getWeather() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(async function (position) {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+                const apiKey = 'da89341e8414fcbf56e17074620471f4';
+                const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`;
+
+                try {
+                    const response = await fetch(apiUrl);
+                    const data = await response.json();
+                    const temperature = data.main.temp;
+                    const location = data.name + ', ' + data.sys.country;
+                    document.getElementById('location').textContent = location;
+                    document.getElementById('temperature').textContent = `${temperature}°C`;
+                } catch (error) {
+                    console.error('Error fetching weather data:', error);
+                    document.getElementById('location').textContent = 'Error fetching weather data. Please try again later.';
+                    document.getElementById('temperature').textContent = '';
+                }
+            });
+        } else {
+            console.error('Geolocation is not supported by this browser.');
+            document.getElementById('location').textContent = 'Geolocation is not supported by this browser.';
+            document.getElementById('temperature').textContent = '';
+        }
+    }
+   // getWeather();
 </script>
+
 
 
 
