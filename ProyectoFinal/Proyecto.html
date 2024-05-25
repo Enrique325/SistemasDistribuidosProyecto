@@ -489,8 +489,6 @@ async function getWeatherForCountry(countryName) {
         infoWindow = new google.maps.InfoWindow({
             content: document.getElementById("info-content"),
         });
-        // Create the autocomplete object and associate it with the UI input control.
-        // Restrict the search to the default country, and to place type "cities".
         autocomplete = new google.maps.places.Autocomplete(
             document.getElementById("autocomplete"),
             {
@@ -501,17 +499,14 @@ async function getWeatherForCountry(countryName) {
         );
         places = new google.maps.places.PlacesService(map);
         autocomplete.addListener("place_changed", onPlaceChanged);
-        // Add a DOM event listener to react when the user selects a country.
         document
             .getElementById("country")
             .addEventListener("change", setAutocompleteCountry);
     }
 
-    // When the user selects a city, get the place details for the city and
-    // zoom the map in on the city.
+  
     function onPlaceChanged() {
         const place = autocomplete.getPlace();
-
         if (place.geometry && place.geometry.location) {
             map.panTo(place.geometry.location);
             map.setZoom(15);
@@ -532,22 +527,14 @@ async function getWeatherForCountry(countryName) {
             if (status === google.maps.places.PlacesServiceStatus.OK && results) {
                 clearResults();
                 clearMarkers();
-
-                // Create a marker for each hotel found, and
-                // assign a letter of the alphabetic to each marker icon.
                 for (let i = 0; i < results.length; i++) {
                     const markerLetter = String.fromCharCode("A".charCodeAt(0) + (i % 26));
                     const markerIcon = MARKER_PATH + markerLetter + ".png";
-
-                    // Use marker animation to drop the icons incrementally on the map.
                     markers[i] = new google.maps.Marker({
                         position: results[i].geometry.location,
                         animation: google.maps.Animation.DROP,
                         icon: markerIcon,
                     });
-                    // If the user clicks a hotel marker, show the details of that hotel
-                    // in an info window.
-                    // @ts-ignore TODO refactor to avoid storing on marker
                     markers[i].placeResult = results[i];
                     google.maps.event.addListener(markers[i], "click", showInfoWindow);
                     setTimeout(dropMarker(i), i * 100);
@@ -734,7 +721,7 @@ async function getWeatherForCountry(countryName) {
         const amount = document.getElementById('amount').value;
         const fromCurrency = document.getElementById('from').value;
         const toCurrency = document.getElementById('to').value;
-        const apiKey = '0f07820e656f674f9a8a3a26'; // Replace with your ExchangeRate-API API key
+        const apiKey = '0f07820e656f674f9a8a3a26'; 
         const apiUrl = `https://v6.exchangerate-api.com/v6/${apiKey}/latest/${fromCurrency}`;
     
         try {
